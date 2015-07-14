@@ -6,4 +6,8 @@ class User < ActiveRecord::Base
   validates :name, :email, presence: true
 
   has_many :barbecues
+
+  def admin?
+    is_admin == true
+  end
 end
