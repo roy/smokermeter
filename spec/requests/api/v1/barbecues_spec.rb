@@ -33,5 +33,38 @@ describe "Barbecues API" do
       expect(response).to be_success
       expect(Barbecue.first.user.name).to eq(user.name)
     end
+
+    it "returns unauthorized when nog logged in" do
+      post '/api/v1/barbecues', {barbecue: {:name => "New bbq"}}, @env
+
+      expect(response).to be_unauthorized
+    end
+  end
+
+  context "editing a barbecue" do
+    it "succeeds" do
+      user = create(:user)
+      barbecue = create(:barbecue, user: user, name: 'first')
+
+      sign_in user
+      put "/api/v1/barbecues/#{barbecue.id}", {barbecue: {name: "second"}}, @env
+
+      barbecue.reload
+      expect(response).to be_success
+      expect(barbecue.name).to eq("second")
+    end
+
+    it "fails when trying to update someone elses barbecue" do
+      user = create(:user)
+      barbecue = create(:barbecue, user: user)
+      other = create(:user)
+
+      sign_in other
+      put "/api/v1/barbecues/#{barbecue.id}", {barbecue: {name: "second"}}, @env
+
+      barbecue.reload
+      expect(response).to be_unauthorized
+      expect(barbecue.name).to_not eq('second')
+    end
   end
 end
