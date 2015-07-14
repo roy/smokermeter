@@ -23,4 +23,15 @@ describe "Barbecues API" do
     expect(json_response['user']['name']).to eq(user.name)
   end
 
+  context "creating a barbecue" do
+    it "creates a barbecue" do
+      user = create(:user)
+      sign_in user
+
+      post '/api/v1/barbecues', {barbecue: {:name => "New bbq"}}, @env
+
+      expect(response).to be_success
+      expect(Barbecue.first.user.name).to eq(user.name)
+    end
+  end
 end
