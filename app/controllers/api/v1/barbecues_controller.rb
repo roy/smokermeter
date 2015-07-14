@@ -4,7 +4,12 @@ module Api
 
       def index
         barbecues = Barbecue.all
-        render json: barbecues, each_serializer: BarbecueSerializer
+        render json: barbecues
+      end
+
+      def show
+        barbecue = Barbecue.find(params[:id])
+        render json: barbecue
       end
 
     end

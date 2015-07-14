@@ -11,4 +11,16 @@ describe "Barbecues API" do
     expect(json_response.length).to eq(3)
   end
 
+  it "returns a single barbecue" do
+    user = create(:user)
+    bbq = create(:barbecue, user: user)
+
+    get "/api/v1/barbecues/#{bbq.to_param}"
+
+    expect(response).to be_success
+    expect(json_response['name']).to eq(bbq.name)
+    expect(json_response['id']).to eq(bbq.id)
+    expect(json_response['user']['name']).to eq(user.name)
+  end
+
 end
