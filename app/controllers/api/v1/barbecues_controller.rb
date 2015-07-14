@@ -37,6 +37,15 @@ module Api
         render json: ['Unauthorized'], status: 401
       end
 
+      def destroy 
+        barbecue = current_user.barbecues.find(params[:id])
+
+        barbecue.destroy
+        head :no_content
+      rescue ActiveRecord::RecordNotFound
+        render json: ['Unauthorized'], status: 401
+      end
+
       private
       def barbecue_params
         params.require(:barbecue).permit(:name)

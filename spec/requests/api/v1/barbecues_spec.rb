@@ -67,4 +67,29 @@ describe "Barbecues API" do
       expect(barbecue.name).to_not eq('second')
     end
   end
+
+  context "deleting a barbecue" do
+    it "succeeds" do
+      user = create(:user)
+      barbecue = create(:barbecue, user: user)
+
+      sign_in user
+      delete "/api/v1/barbecues/#{barbecue.id}", {}, @env
+
+      expect(response).to be_succes
+      expect(Barbecue.count).to eq(0)
+    end
+
+    it "fails when trying to delete someone elses barbecue" do
+      user = create(:user)
+      barbecue = create(:barbecue, user: user)
+      other = create(:user)
+
+      sign_in other
+      delete "/api/v1/barbecues/#{barbecue.id}", {}, @env
+
+      expect(response).to be_unauthorized
+      expect(Barbecue.count).to eq(1)
+    end
+  end
 end
