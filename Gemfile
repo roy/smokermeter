@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.3'
 gem 'mysql2'
 gem 'responders', '~> 2.0'
+gem 'bcrypt', '~> 3.1.7'
 
 group :development, :test do
   gem 'byebug'
