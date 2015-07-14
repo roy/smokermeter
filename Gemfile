@@ -4,6 +4,7 @@ gem 'rails', '4.2.3'
 gem 'mysql2'
 gem 'responders', '~> 2.0'
 gem 'bcrypt', '~> 3.1.7'
+gem 'active_model_serializers'
 
 group :development, :test do
   gem 'byebug'
