@@ -20,4 +20,5 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem "factory_girl_rails", "~> 4.0"
   gem 'timecop'
+  gem "codeclimate-test-reporter", require: nil
 end
