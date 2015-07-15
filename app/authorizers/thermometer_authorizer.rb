@@ -1,23 +1,13 @@
-class ThermometerAuthorizer
-  attr_reader :user, :barbecue, :thermometer
+class ThermometerAuthorizer < BaseAuthorizer
+
+  attr_reader :barbecue, :thermometer
 
   def initialize(user, barbecue, thermometer)
-    @user, @barbecue, @thermometer = user, barbecue, thermometer
+    super(user)
+    @barbecue, @thermometer = barbecue, thermometer
   end
 
-  def update?
-    return true if is_admin?
-    return true if is_owner?
-
-    false
-  end
-  alias_method :destroy?, :update?
-
-  private
-  def is_admin?
-    user.admin?
-  end
-
+  protected
   def is_owner?
     user.id == barbecue.user_id && thermometer.barbecue_id == barbecue.id
   end

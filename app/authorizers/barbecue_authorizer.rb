@@ -1,21 +1,14 @@
-class BarbecueAuthorizer
+class BarbecueAuthorizer < BaseAuthorizer
 
-  attr_reader :user, :model
+  attr_reader :model
 
   def initialize(user, model)
-    @user, @model = user, model
+    super(user)
+    @model = model
   end
 
-  def show?
-    true
+  protected
+  def is_owner?
+    user.id == model.user_id
   end
-
-  def update?
-    return true if user.admin?
-    return true if user.id == model.user_id
-
-    false
-  end
-  alias_method :destroy?, :update?
-
 end

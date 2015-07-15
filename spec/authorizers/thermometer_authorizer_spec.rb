@@ -1,4 +1,5 @@
 require "spec_helper"
+require_relative "../../app/authorizers/base_authorizer"
 require_relative "../../app/authorizers/thermometer_authorizer"
 
 describe ThermometerAuthorizer do
