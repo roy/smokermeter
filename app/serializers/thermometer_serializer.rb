@@ -1,3 +1,3 @@
-class ThermometerSerializer < ActiveModel::Serializer
+class ThermometerSerializer < BaseSerializer
   attributes :id, :location
 end

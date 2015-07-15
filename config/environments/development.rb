@@ -23,4 +23,5 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
 
   config.assets.enabled = false
+  config.action_mailer.default_url_options = { :host => 'smokermeter.dev' }
 end

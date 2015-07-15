@@ -33,6 +33,18 @@ describe "Barbecues API" do
       expect(response).to be_success
       expect(response).to_not include('password_digest')
     end
+
+    it 'shows timestamps when admin' do
+      admin = create(:admin)
+      bbq = create(:barbecue, user: admin)
+      sign_in admin
+
+      get "/api/v1/barbecues/#{bbq.to_param}", {}, @env
+      
+      expect(response).to be_success
+      expect(json_response.keys).to include('created_at')
+      expect(json_response.keys).to include('updated_at')
+    end
   end
 
   context "creating a barbecue" do

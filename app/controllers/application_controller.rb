@@ -12,18 +12,9 @@ class ApplicationController < ActionController::Base
   end  
 
   def current_user
-    @current_user ||= find_by_http_auth
+    @current_user ||= find_by_http_auth || GuestUser.new
   end
-
-  def find_by_http_auth
-    return nil if request.authorization.nil?
-
-    email, password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
-    user = User.find_by(email: email)
-    return nil unless user
-
-    user.authenticate(password)
-  end
+  helper_method :current_user
 
   def authorize
     authenticate_or_request_with_http_basic do |email, password|
@@ -36,5 +27,17 @@ class ApplicationController < ActionController::Base
 
   def deny_access
     render json: ['Unauthorized'], status: 401
+  end
+
+  private
+
+  def find_by_http_auth
+    return nil if request.authorization.nil?
+
+    email, password = ActionController::HttpAuthentication::Basic::user_name_and_password(request)
+    user = User.find_by(email: email)
+    return nil unless user
+
+    user.authenticate(password)
   end
 end

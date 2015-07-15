@@ -1,5 +1,5 @@
-class BarbecueSerializer < ActiveModel::Serializer
+class BarbecueSerializer < BaseSerializer
   attributes :id, :name
 
-  has_one :user
+  belongs_to :user
 end
