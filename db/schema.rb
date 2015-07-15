@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150714220519) do
+ActiveRecord::Schema.define(version: 20150715073634) do
 
   create_table "barbecues", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -21,6 +21,15 @@ ActiveRecord::Schema.define(version: 20150714220519) do
   end
 
   add_index "barbecues", ["user_id"], name: "index_barbecues_on_user_id", using: :btree
+
+  create_table "thermometers", force: :cascade do |t|
+    t.integer  "barbecue_id", limit: 4
+    t.string   "location",    limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "thermometers", ["barbecue_id"], name: "index_thermometers_on_barbecue_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -32,4 +41,5 @@ ActiveRecord::Schema.define(version: 20150714220519) do
   end
 
   add_foreign_key "barbecues", "users"
+  add_foreign_key "thermometers", "barbecues"
 end
