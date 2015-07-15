@@ -10,9 +10,7 @@ module Api
       end
 
       def show
-        thermometer = find_barbecue.thermometers.find(params[:id])
-
-        render json: thermometer
+        render json: find_thermometer
       end
 
       def create
@@ -24,8 +22,7 @@ module Api
       end
 
       def update
-        thermometer = find_barbecue.thermometers.find(params[:id])
-        authorizer(find_barbecue, thermometer)
+        thermometer = find_thermometer
 
         if thermometer.update(thermometer_params)
           render json: thermometer, status: :ok, location: [:api, :v1, find_barbecue, thermometer]
@@ -35,10 +32,7 @@ module Api
       end
 
       def destroy
-        thermometer = find_barbecue.thermometers.find(params[:id])
-        authorizer(find_barbecue, thermometer)
-
-        thermometer.destroy
+        find_thermometer.destroy
         head :no_content
       end
 
@@ -50,12 +44,19 @@ module Api
           raise UnAuthorizedError
         end
       end
+
       def thermometer_params
         params.require(:thermometer).permit(:location)
       end
 
       def find_barbecue
         Barbecue.find(params[:barbecue_id])
+      end
+
+      def find_thermometer
+        thermometer = find_barbecue.thermometers.find(params[:id])
+        authorizer(find_barbecue, thermometer)
+        thermometer
       end
     end
   end

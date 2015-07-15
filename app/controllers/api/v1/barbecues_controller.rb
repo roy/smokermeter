@@ -4,13 +4,11 @@ module Api
       before_filter :authorize, only: [:create, :update, :destroy]
 
       def index
-        barbecues = Barbecue.all
-
-        render json: barbecues
+        render json: Barbecue.all
       end
 
       def show
-        render json: find_barbecue(params[:id])
+        render json: find_barbecue
       end
 
       def create
@@ -24,7 +22,7 @@ module Api
       end
 
       def update
-        barbecue = find_barbecue(params[:id])
+        barbecue = find_barbecue
 
         if barbecue.update(barbecue_params)
           render json: barbecue, status: :ok, location: [:api, :v1, barbecue]
@@ -34,15 +32,13 @@ module Api
       end
 
       def destroy 
-        barbecue = find_barbecue(params[:id])
-
-        barbecue.destroy
+        find_barbecue.destroy
         head :no_content
       end
 
       private
-      def find_barbecue(id)
-        barbecue = Barbecue.find(id)
+      def find_barbecue
+        barbecue = Barbecue.find(params[:id])
         authorizer(current_user, barbecue)
         barbecue
       end
