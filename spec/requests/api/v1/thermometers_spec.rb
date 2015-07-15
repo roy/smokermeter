@@ -29,8 +29,8 @@ describe "Thermometers API" do
       user = create(:user)
       bbq = create(:barbecue, user: user)
       thermometer_arguments = {location: "grill"}
-      sign_in user
 
+      sign_in user
       post "/api/v1/barbecues/#{bbq.id}/thermometers", {thermometer: thermometer_arguments}, @env
 
       expect(response).to be_success
@@ -44,6 +44,63 @@ describe "Thermometers API" do
       post "/api/v1/barbecues/#{bbq.id}/thermometers", thermometer: thermometer_arguments
 
       expect(response).to be_unauthorized
+      expect(bbq.thermometers.count).to eq(0)
+    end
+  end
+
+  context "#update" do
+    it "allows update for admin" do
+      user = create(:user)
+      admin = create(:admin)
+      bbq = create(:barbecue, user: user)
+      thermometer = create(:thermometer, barbecue: bbq, location: 'grill')
+      arguments = {location: 'hood'}
+
+      sign_in admin 
+      put "/api/v1/barbecues/#{bbq.id}/thermometers/#{thermometer.id}", {thermometer: arguments}, @env
+
+      expect(response).to be_success
+      expect(bbq.thermometers.first.location).to eq('hood')
+    end
+
+    it "allows update for owner" do
+      user = create(:user)
+      bbq = create(:barbecue, user: user)
+      thermometer = create(:thermometer, barbecue: bbq, location: 'grill')
+      arguments = {location: 'hood'}
+
+      sign_in user
+      put "/api/v1/barbecues/#{bbq.id}/thermometers/#{thermometer.id}", {thermometer: arguments}, @env
+
+      expect(response).to be_success
+      expect(bbq.thermometers.first.location).to eq('hood')
+    end
+
+    it "denies update for other" do
+      user = create(:user)
+      bbq = create(:barbecue, user: user)
+      thermometer = create(:thermometer, barbecue: bbq, location: 'grill')
+      other = create(:user)
+      arguments = {location: 'hood'}
+
+      sign_in other
+      put "/api/v1/barbecues/#{bbq.id}/thermometers/#{thermometer.id}", {thermometer: arguments}, @env
+
+      expect(response).to be_unauthorized
+    end
+  end
+
+  context "#destroy" do
+    it 'allows for admin' do
+      user = create(:user)
+      bbq = create(:barbecue, user: user)
+      thermometer = create(:thermometer, barbecue: bbq)
+      admin = create(:admin)
+
+      sign_in admin
+      delete "/api/v1/barbecues/#{bbq.id}/thermometers/#{thermometer.id}", {}, @env
+
+      expect(response).to be_success
       expect(bbq.thermometers.count).to eq(0)
     end
   end

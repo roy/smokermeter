@@ -15,6 +15,10 @@ FactoryGirl.define do
     name
     email
     password 'password'
+
+    factory :admin do
+      is_admin true
+    end
   end
 
   factory :barbecue do
